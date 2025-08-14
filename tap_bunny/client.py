@@ -269,10 +269,11 @@ class BunnyStream(GraphQLStream):
             variables["first"] = 100
             
         # Add sort variable if specified in config, else use id
-        if "sort" in self.config:
-            variables["sort"] = self.config["sort"]
-        elif self.config.get("sort") is not False:
-            variables["sort"] = "id"
+        if getattr(self, "support_sort", True):
+            if "sort" in self.config:
+                variables["sort"] = self.config["sort"]
+            else:
+                variables["sort"] = "id"
             
         # Add filter variable if specified in config
         if "filter" in self.config:
