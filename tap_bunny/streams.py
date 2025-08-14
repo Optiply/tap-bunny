@@ -588,7 +588,7 @@ class PaymentMethodsStream(BunnyStream):
         th.Property("updatedAt", th.DateTimeType),
     ).to_dict()
     primary_keys: t.ClassVar[list[str]] = ["id"]
-    apply_sort = False
+    sort = False
 
     query = """
     query PaymentMethods($after: String, $before: String, $first: Int, $last: Int, $filter: String, $sort: String) {
