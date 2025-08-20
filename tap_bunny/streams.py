@@ -1318,3 +1318,72 @@ class FeaturesStream(BunnyStream):
         }
     }
     """
+
+
+class CreditNotesStream(BunnyStream):
+    """Define custom stream."""
+
+    name = "credit_notes"
+    path = "/graphql"
+    schema = th.PropertiesList(
+        th.Property("id", th.StringType),
+        th.Property("accountId", th.StringType),
+        th.Property("amount", th.CustomType({"type": ["number", "string", "null"]})),
+        th.Property("amountApplied", th.CustomType({"type": ["number", "string", "null"]})),
+        th.Property("amountUnapplied", th.CustomType({"type": ["number", "string", "null"]})),
+        th.Property("createdAt", th.DateTimeType),
+        th.Property("creditedInvoiceId", th.StringType),
+        th.Property("currencyId", th.StringType),
+        th.Property("description", th.StringType),
+        th.Property("disputeReasonId", th.StringType),
+        th.Property("entityId", th.StringType),
+        th.Property("isCredit", th.BooleanType),
+        th.Property("isLegacy", th.BooleanType),
+        th.Property("issuedAt", th.DateTimeType),
+        th.Property("number", th.StringType),
+        th.Property("subtotal", th.CustomType({"type": ["number", "string", "null"]})),
+        th.Property("taxAmount", th.CustomType({"type": ["number", "string", "null"]})),
+        th.Property("updatedAt", th.DateTimeType),
+        th.Property("uuid", th.StringType),
+        th.Property("warrenId", th.StringType),
+    ).to_dict()
+    primary_keys: t.ClassVar[list[str]] = ["id"]
+
+    query = """
+    query creditNotes ($after: String, $before: String, $first: Int, $last: Int, $filter: String, $sort: String, $viewId: ID, $format: String) {
+        creditNotes (after: $after, before: $before, first: $first, last: $last, filter: $filter, sort: $sort, viewId: $viewId, format: $format) {
+            edges {
+                cursor
+                node {
+                    accountId
+                    amount
+                    amountApplied
+                    amountUnapplied
+                    createdAt
+                    creditedInvoiceId
+                    currencyId
+                    description
+                    disputeReasonId
+                    entityId
+                    id
+                    isCredit
+                    isLegacy
+                    issuedAt
+                    number
+                    subtotal
+                    taxAmount
+                    updatedAt
+                    uuid
+                    warrenId
+                }
+            }
+            totalCount
+            pageInfo {
+                startCursor
+                endCursor
+                hasNextPage
+                hasPreviousPage
+            }
+        }
+    }
+    """
