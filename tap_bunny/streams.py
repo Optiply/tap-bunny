@@ -401,7 +401,6 @@ class InvoicesStream(BunnyStream):
         th.Property("paidAt", th.DateTimeType),
         th.Property("payableId", th.StringType),
         th.Property("poNumber", th.StringType),
-        th.Property("portalUrl", th.StringType),
         th.Property("quoteId", th.StringType),
         th.Property("smallUnitAmountDue", th.CustomType({"type": ["number", "string", "null"]})),
         th.Property("state", th.StringType),
@@ -434,7 +433,6 @@ class InvoicesStream(BunnyStream):
                 paidAt
                 payableId
                 poNumber
-                portalUrl
                 quoteId
                 smallUnitAmountDue
                 state
