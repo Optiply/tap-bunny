@@ -34,6 +34,8 @@ STREAM_TYPES = [
     streams.FeatureUsagesStream,
     streams.FeaturesStream,
     streams.CreditNotesStream,
+    streams.DealsStream,
+    streams.UsersStream
 ]
 
 class TapBunny(Tap):
@@ -115,6 +117,8 @@ class TapBunny(Tap):
             streams.FeatureUsagesStream(self),
             streams.FeaturesStream(self),
             streams.CreditNotesStream(self),
+            streams.DealsStream(self),
+            streams.UsersStream(self)
         ]
 
     def _get_auth_url(self) -> str:
