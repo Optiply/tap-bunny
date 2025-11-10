@@ -65,7 +65,7 @@ class BunnyAuthenticator(OAuthAuthenticator, metaclass=SingletonMeta):
             "grant_type": "client_credentials",
             "client_id": self.config["client_id"],
             "client_secret": self.config["client_secret"],
-            "scope": "standard:read standard:write product:read product:write billing:read billing:write",
+            "scope": "standard:read standard:write product:read product:write billing:read billing:write security:read admin:read",
         }
 
     def update_access_token(self) -> None:
