@@ -17,37 +17,6 @@ from tap_bunny.client import BunnyStream
 # TODO: Delete this is if not using json files for schema definition
 SCHEMAS_DIR = resources.files(__package__) / "schemas"
 
-class UsersStream(BunnyStream):
-    """Define custom stream."""
-
-    name = "users"
-    # Optionally, you may also use `schema_filepath` in place of `schema`:
-    # schema_filepath = SCHEMAS_DIR / "users.json"
-    schema = th.PropertiesList(
-        th.Property("name", th.StringType),
-        th.Property("id", th.StringType),
-        th.Property("modified", th.DateTimeType),
-    ).to_dict()
-    primary_keys: t.ClassVar[list[str]] = ["id"]
-
-    query = """
-    query Users($after: String, $sort: String) {
-        users(first: 100, after: $after, sort: $sort) {
-            nodes {
-                id
-                name
-                modified
-            }
-            pageInfo {
-                startCursor
-                endCursor
-                hasNextPage
-                hasPreviousPage
-            }
-            }
-        }
-        """
-
 
 class GroupsStream(BunnyStream):
     """Define custom stream."""
@@ -1384,4 +1353,136 @@ class CreditNotesStream(BunnyStream):
             }
         }
     }
+    """
+
+
+class DealsStream(BunnyStream):
+    """Define custom stream."""
+
+    name = "deals"
+    path = "/graphql"
+    schema = th.PropertiesList(
+        th.Property("id", th.StringType),
+        th.Property("accountId", th.StringType),
+        th.Property("amount", th.CustomType({"type": ["number", "string", "null"]})),
+        th.Property("closeDate", th.DateTimeType),
+        th.Property("code", th.StringType),
+        th.Property("contactId", th.StringType),
+        th.Property("createdAt", th.DateTimeType),
+        th.Property("currencyId", th.StringType),
+        th.Property("dealStageId", th.StringType),
+        th.Property("description", th.StringType),
+        th.Property("entityId", th.StringType),
+        th.Property("leadSourceId", th.StringType),
+        th.Property("name", th.StringType),
+        th.Property("notForRevenue", th.BooleanType),
+        th.Property("ownerUserId", th.StringType),
+        th.Property("probability", th.CustomType({"type": ["number", "string", "null"]})),
+        th.Property("stageDescription", th.StringType),
+        th.Property("updatedAt", th.DateTimeType),
+        th.Property("viaPortal", th.BooleanType)
+    ).to_dict()
+    primary_keys: t.ClassVar[list[str]] = ["id"]
+
+    query = """
+    query deals ($after: String, $before: String, $first: Int, $last: Int, $filter: String, $sort: String, $viewId: ID, $format: String) {
+        deals (after: $after, before: $before, first: $first, last: $last, filter: $filter, sort: $sort, viewId: $viewId, format: $format) {
+            edges {
+                cursor
+                node {
+                    accountId
+                    amount
+                    closeDate
+                    code
+                    contactId
+                    createdAt
+                    currencyId
+                    dealStageId
+                    description
+                    entityId
+                    id
+                    leadSourceId
+                    name
+                    notForRevenue
+                    ownerUserId
+                    probability
+                    stageDescription
+                    updatedAt
+                    viaPortal
+                }
+            }
+            totalCount
+            pageInfo {
+                startCursor
+                endCursor
+                hasNextPage
+                hasPreviousPage
+            }
+        }
+    }
+    """
+
+
+class UsersStream(BunnyStream):
+    """Define custom stream."""
+
+    name = "users"
+    path = "/graphql"
+    schema = th.PropertiesList(
+        th.Property("id", th.StringType),
+        th.Property("allowLoginViaEmailLink", th.BooleanType),
+        th.Property("createdAt", th.DateTimeType),
+        th.Property("email", th.StringType),
+        th.Property("enabled", th.BooleanType),
+        th.Property("entityId", th.StringType),
+        th.Property("firstName", th.StringType),
+        th.Property("fullName", th.StringType),
+        th.Property("groupId", th.StringType),
+        th.Property("imageUrl", th.StringType),
+        th.Property("lastLogin", th.DateTimeType),
+        th.Property("lastName", th.StringType),
+        th.Property("managerUserId", th.StringType),
+        th.Property("name", th.StringType),
+        th.Property("roleId", th.StringType),
+        th.Property("title", th.StringType),
+        th.Property("updatedAt", th.DateTimeType),
+        th.Property("uuid", th.StringType)
+    ).to_dict()
+    primary_keys: t.ClassVar[list[str]] = ["id"]
+
+    query = """
+    query users ($after: String, $before: String, $first: Int, $last: Int, $filter: String, $sort: String, $viewId: ID, $format: String) {
+        users (after: $after, before: $before, first: $first, last: $last, filter: $filter, sort: $sort, viewId: $viewId, format: $format) {
+            edges {
+                cursor
+                node {
+                    allowLoginViaEmailLink
+                    createdAt
+                    email
+                    enabled
+                    entityId
+                    firstName
+                    fullName
+                    groupId
+                    id
+                    imageUrl
+                    lastLogin
+                    lastName
+                    managerUserId
+                    name
+                    roleId
+                    title
+                    updatedAt
+                    uuid
+                }
+                }
+                totalCount
+                pageInfo {
+                    startCursor
+                    endCursor
+                    hasNextPage
+                    hasPreviousPage
+                }
+            }
+        }
     """
