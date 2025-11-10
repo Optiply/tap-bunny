@@ -289,7 +289,7 @@ class EntitiesStream(BunnyStream):
         th.Property("timezone", th.StringType),
         th.Property("topNavImageUrl", th.StringType),
         th.Property("tzIdentifier", th.StringType),
-        th.Property("tzOffset", th.IntegerType),
+        th.Property("tzOffset", th.StringType),
         th.Property("updatedAt", th.DateTimeType),
         th.Property("website", th.StringType),
     ).to_dict()
