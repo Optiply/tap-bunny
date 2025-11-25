@@ -1075,11 +1075,8 @@ class TenantsStream(BunnyStream):
         th.Property("code", th.StringType),
         th.Property("createdAt", th.DateTimeType),
         th.Property("lastLogin", th.DateTimeType),
-        th.Property("latestProvisioningChangeId", th.StringType),
         th.Property("name", th.StringType),
         th.Property("platformId", th.StringType),
-        th.Property("provisioningRequired", th.BooleanType),
-        th.Property("provisioningState", th.StringType),
         th.Property("subdomain", th.StringType),
         th.Property("updatedAt", th.DateTimeType),
         th.Property("userCount", th.IntegerType),
@@ -1096,11 +1093,8 @@ class TenantsStream(BunnyStream):
                 code
                 createdAt
                 lastLogin
-                latestProvisioningChangeId
                 name
                 platformId
-                provisioningRequired
-                provisioningState
                 subdomain
                 updatedAt
                 userCount
