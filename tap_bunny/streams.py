@@ -503,6 +503,14 @@ class PaymentsStream(BunnyStream):
         th.Property("receivedAt", th.DateTimeType),
         th.Property("state", th.StringType),
         th.Property("updatedAt", th.DateTimeType),
+        th.Property("completedAt", th.DateTimeType),
+        th.Property("conversionRate", th.CustomType({"type": ["number", "string", "null"]})),
+        th.Property("errorCode", th.StringType),
+        th.Property("errorMessage", th.StringType),
+        th.Property("fees", th.CustomType({"type": ["number", "string", "null"]})),
+        th.Property("paymentProcessor", th.StringType),
+        th.Property("remoteTransactionId", th.StringType),
+        th.Property("startedAt", th.DateTimeType),
     ).to_dict()
     primary_keys: t.ClassVar[list[str]] = ["id"]
 
@@ -1307,6 +1315,7 @@ class CreditNotesStream(BunnyStream):
         th.Property("updatedAt", th.DateTimeType),
         th.Property("uuid", th.StringType),
         th.Property("warrenId", th.StringType),
+        th.Property("state", th.StringType),
     ).to_dict()
     primary_keys: t.ClassVar[list[str]] = ["id"]
 
