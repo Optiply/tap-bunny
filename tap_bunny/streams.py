@@ -446,32 +446,40 @@ class InvoiceItemsStream(BunnyStream):
         th.Property("taxAmount", th.CustomType({"type": ["number", "string", "null"]})),
         th.Property("taxCode", th.StringType),
         th.Property("vatCode", th.StringType),
+        th.Property("invoiceUpdatedAt", th.DateTimeType),
     ).to_dict()
     primary_keys: t.ClassVar[list[str]] = ["id"]
 
     query = """
-    query InvoiceItems($after: String, $sort: String) {
-        invoiceItems(first: 100, after: $after, sort: $sort) {
-            nodes {
-                id
-                amount
-                chargeType
-                couponId
-                currencyId
-                discount
-                invoiceId
-                kind
-                lineText
-                position
-                price
-                priceDecimals
-                prorationRate
-                quantity
-                subtotal
-                taxAmount
-                taxCode
-                vatCode
+    query InvoiceItems($after: String, $before: String, $first: Int, $last: Int, $filter: String, $sort: String, $viewId: ID, $format: String) {
+        invoiceItems(after: $after, before: $before, first: $first, last: $last, filter: $filter, sort: $sort, viewId: $viewId, format: $format) {
+            edges {
+                cursor
+                node {
+                    id
+                    amount
+                    chargeType
+                    couponId
+                    currencyId
+                    discount
+                    invoiceId
+                    kind
+                    lineText
+                    position
+                    price
+                    priceDecimals
+                    prorationRate
+                    quantity
+                    subtotal
+                    taxAmount
+                    taxCode
+                    vatCode
+                    invoice {
+                        updatedAt
+                    }
+                }
             }
+            totalCount
             pageInfo {
                 startCursor
                 endCursor
@@ -481,6 +489,25 @@ class InvoiceItemsStream(BunnyStream):
         }
     }
     """
+
+    def post_process(
+        self,
+        row: dict,
+        context: dict | None = None,
+    ) -> dict | None:
+        """Flatten invoice.updatedAt to a top-level replication key field.
+
+        The BunnyStream base class expects the replication_key value to live at
+        the top level of the record (``row[replication_key]``). The API,
+        however, returns the timestamp under ``invoice.updatedAt``. Here we
+        copy that nested value into ``invoiceUpdatedAt`` before delegating to
+        the shared incremental filtering logic in ``BunnyStream.post_process``.
+        """
+        invoice = row.get("invoice")
+        if isinstance(invoice, dict) and invoice.get("updatedAt"):
+            row["invoiceUpdatedAt"] = invoice["updatedAt"]
+
+        return super().post_process(row, context)
 
 
 class PaymentsStream(BunnyStream):
