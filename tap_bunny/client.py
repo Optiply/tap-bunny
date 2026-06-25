@@ -177,6 +177,14 @@ class BunnyStream(GraphQLStream):
         # Always return None to perform a full sync using cursor-based pagination
         return None
 
+    def get_graphql_field_name(self) -> str:
+        """Return the GraphQL response field name for this stream."""
+        if "_" not in self.name:
+            return self.name
+
+        field_name = "".join(word.capitalize() for word in self.name.split("_"))
+        return field_name[0].lower() + field_name[1:]
+
     def get_next_page_token(
         self,
         response: requests.Response,
@@ -196,9 +204,7 @@ class BunnyStream(GraphQLStream):
         """
         try:
             data = response.json()
-            # Nome do campo conforme camelCase
-            field_name = "".join(word.capitalize() for word in self.name.split("_"))
-            field_name = field_name[0].lower() + field_name[1:]
+            field_name = self.get_graphql_field_name()
             stream_data = data.get("data", {}).get(field_name, {})
 
             # nodes pode estar em nodes ou edges
@@ -300,9 +306,7 @@ class BunnyStream(GraphQLStream):
         """
         try:
             data = response.json()
-            # Convert stream name to camelCase for GraphQL field name
-            field_name = "".join(word.capitalize() for word in self.name.split("_"))
-            field_name = field_name[0].lower() + field_name[1:]
+            field_name = self.get_graphql_field_name()
             stream_data = data.get("data", {}).get(field_name, {})
 
             # Handle both nodes and edges-based pagination
