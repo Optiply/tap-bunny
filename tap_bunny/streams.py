@@ -513,7 +513,7 @@ class InvoiceItemsStream(BunnyStream):
 class InvoiceForecastsStream(BunnyStream):
     """Define invoice forecasts stream."""
 
-    name = "invoiceForecasts"
+    name = "invoice_forecasts"
     path = "/graphql"
     schema = th.PropertiesList(
         th.Property("id", th.StringType),
